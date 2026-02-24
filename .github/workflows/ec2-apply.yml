@@ -1,0 +1,45 @@
+name: EC2 Deploy on main
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'EC2/**'
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  deploy:
+    name: Deploy EC2 (terraform apply)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: '1.6.0'
+
+      - name: Terraform init
+        working-directory: EC2
+        run: terraform init
+
+      - name: Terraform apply
+        working-directory: EC2
+        run: terraform apply -auto-approve
+
+    # IMPORTANT: Ensure the repository has the following secrets configured:
+    # - AWS_ROLE_TO_ASSUME (role ARN with permissions to manage the EC2 resources)
+    # - AWS_REGION
+    # Alternately, replace the Configure AWS credentials step with a different
+    # authentication method (long-lived keys or OIDC) according to your security policy.

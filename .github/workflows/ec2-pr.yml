@@ -1,0 +1,64 @@
+name: EC2 PR checks
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'EC2/**'
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  fmt-validate-plan:
+    name: Format, Validate & Plan (EC2)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: '1.6.0'
+
+      - name: Terraform fmt
+        working-directory: EC2
+        run: terraform fmt -check -recursive
+
+      - name: Terraform init
+        working-directory: EC2
+        run: terraform init -backend=false
+
+      - name: Terraform validate
+        working-directory: EC2
+        run: terraform validate
+
+      - name: Terraform plan
+        working-directory: EC2
+        run: |
+          terraform plan -no-color -out=tfplan
+          terraform show -no-color tfplan > plan.txt
+
+      - name: Post plan to PR
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const path = 'EC2/plan.txt';
+            let body = '### Terraform plan (EC2)\n';
+            if (fs.existsSync(path)) {
+              let plan = fs.readFileSync(path, 'utf8');
+              if (plan.length > 64000) plan = plan.slice(0,64000) + '\n\n(Plan truncated)';
+              body += '```\n' + plan + '\n```';
+            } else {
+              body += 'Plan output not available.';
+            }
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: body
+            });
