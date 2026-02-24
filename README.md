@@ -1,3 +1,49 @@
+# ayyalaka / myDevOps - AWS IaC with Terraform
+
+This repository scaffolds AWS infrastructure for learning and experimentation.
+
+It contains Terraform configurations for multiple components and example
+environments covering VPC, EC2, ALB, S3, RDS, CloudWatch, Grafana, and EKS.
+
+## Prerequisites
+
+- Terraform >= 1.0 (1.6 recommended for newer features)
+- AWS account with programmatic access (Access Key + Secret) or OIDC setup for GitHub Actions
+
+## Layout
+
+- `EC2/` - modules and configs for ALB, ASG, security groups, and VPC
+- `EKS/` - EKS cluster and VPC configurations
+- `.github/workflows/` - CI pipelines
+
+## Quick start (local)
+
+```bash
+cd /Users/dinnu/Downloads/myDevOps
+terraform init
+terraform fmt -recursive
+terraform validate
+```
+
+For environment-specific usage follow files under each environment/module folder.
+
+## CI
+
+This repo includes a GitHub Actions workflow at `.github/workflows/terraform-ci.yml` that runs `terraform fmt` and `terraform validate` on PRs and pushes to `main`.
+
+## Branch protection
+
+See `BRANCH_PROTECTION.md` for instructions to enable branch protection rules for `main` (recommend requiring PR reviews and passing status checks).
+
+## Next steps
+
+- Add dashboards in Grafana pointing to CloudWatch Logs Insights queries.
+- Expand modules (NAT Gateway, private ALBs, multi-AZ RDS).
+
+## License
+
+Add a license as needed.
+<<<<<<< HEAD
 # ayyalaka AWS IaC with Terraform
 
 This repository scaffolds AWS infrastructure for learning and experimentation aligned with AWS SAA topics:
@@ -47,3 +93,36 @@ Workflows use OpenID Connect (OIDC) or long-lived keys (prefer OIDC). Set reposi
 ## Next steps
 - Add dashboards in Grafana pointing to CloudWatch Logs Insights queries.
 - Expand modules (NAT Gateway, private ALBs, multi-AZ RDS).
+=======
+# myDevOps
+
+This repository contains Terraform configurations for AWS infrastructure, including EC2 and EKS modules.
+
+## Layout
+
+- `EC2/` - modules and configs for ALB, ASG, security groups, and VPC
+- `EKS/` - EKS cluster and VPC configurations
+
+## Quick start
+
+Install Terraform (>= 1.0) and run:
+
+```bash
+cd /Users/dinnu/Downloads/myDevOps
+terraform init
+terraform fmt -recursive
+terraform validate
+```
+
+## CI
+
+This repo includes a GitHub Actions workflow at `.github/workflows/terraform-ci.yml` that runs `terraform fmt` and `terraform validate` on PRs and pushes to `main`.
+
+## Branch protection
+
+See `BRANCH_PROTECTION.md` for instructions to enable branch protection rules for `main` (recommend requiring PR reviews and passing status checks).
+
+## License
+
+Add a license as needed.
+>>>>>>> work-save
