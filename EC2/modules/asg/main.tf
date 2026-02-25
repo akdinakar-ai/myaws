@@ -30,11 +30,11 @@ resource "aws_autoscaling_group" "asg" {
     version = "$Latest"
   }
 
-  min_size             = var.asg_capacity
-  max_size             = var.asg_capacity
-  desired_capacity     = var.asg_capacity
-  vpc_zone_identifier  = var.subnet_ids
-  target_group_arns    = [var.tg_arn]
+  min_size            = var.asg_capacity
+  max_size            = var.asg_capacity
+  desired_capacity    = var.asg_capacity
+  vpc_zone_identifier = var.subnet_ids
+  target_group_arns   = [var.tg_arn]
 
   tag {
     key                 = "Name"

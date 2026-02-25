@@ -1,5 +1,5 @@
 resource "aws_iam_policy" "tf_ec2_alb_asg_limited" {
-  name   = "tf-ec2-alb-asg-limited"
+  name = "tf-ec2-alb-asg-limited"
   policy = jsonencode({
     Version = "2012-10-17",
     Statement = [
