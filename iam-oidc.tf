@@ -1,7 +1,7 @@
 variable "github_org" {
   description = "GitHub organization or user that will issue OIDC tokens"
   type        = string
-  default     = "DIN"
+  default     = "akdinakar-ai"
 }
 
 variable "github_repo" {
