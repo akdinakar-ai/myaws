@@ -26,20 +26,7 @@ resource "aws_iam_policy" "tf_ec2_alb_asg_limited" {
       {
         Effect = "Allow",
         Action = [
-          "s3:GetObject",
-          "s3:PutObject",
-          "s3:ListBucket",
-          "s3:GetBucketAcl",
-          "s3:GetBucketCORS",
-          "s3:GetBucketVersioning",
-          "s3:GetBucket*",
-          "s3:GetBucketWebsite",
-          "s3:GetBucketVersioning",
-          "s3:GetBucketLogging",
-          "s3:GetBucketEncryption",
-          "s3:GetBucketPolicyStatus",
-          "s3:GetBucketLocation",
-          "s3:GetBucketPolicy"
+          "s3:Get*"
         ],
         Resource = [
           aws_s3_bucket.backend.arn,
