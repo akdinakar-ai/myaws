@@ -1,0 +1,45 @@
+name: Terraform Plan (PR and main)
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - '**'
+  push:
+    branches: [ main ]
+
+jobs:
+  plan:
+    name: Terraform Plan
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: '1.6.0'
+
+      - name: Configure AWS credentials from OIDC
+        uses: aws-actions/configure-aws-credentials@v3
+        with:
+          role-to-assume: arn:aws:iam::901635709382:role/tf-github-actions-role
+          aws-region: us-east-1
+
+      - name: Terraform init (no backend for PRs)
+        run: terraform init -backend=false
+
+      - name: Terraform plan
+        run: |
+          terraform plan -no-color -out=tfplan
+          terraform show -no-color tfplan > plan.txt
+
+      - name: Upload plan artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tfplan
+          path: plan.txt
